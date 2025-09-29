@@ -4,11 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yiye.model.dto.picture.PictureQueryRequest;
+import com.yiye.model.dto.picture.PictureReviewRequest;
+import com.yiye.model.dto.picture.PictureUploadByBatchRequest;
 import com.yiye.model.dto.picture.PictureUploadRequest;
 import com.yiye.model.entity.Picture;
 import com.yiye.model.entity.User;
 import com.yiye.model.vo.PictureVO;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,27 +20,26 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface PictureService extends IService<Picture> {
     /**
+     * 校验图片
+     *
+     * @param picture
+     */
+    void validPicture(Picture picture);
+
+    /**
      * 上传图片
      *
-     * @param multipartFile
+     * @param inputSource          文件输入源
      * @param pictureUploadRequest
      * @param loginUser
      * @return
      */
-    PictureVO uploadPicture(MultipartFile multipartFile,
+    PictureVO uploadPicture(Object inputSource,
                             PictureUploadRequest pictureUploadRequest,
                             User loginUser);
 
     /**
-     * 将查询请求转为 QueryWrapper 对象
-     *
-     * @param pictureQueryRequest
-     * @return
-     */
-    QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest);
-
-    /**
-     * 获取单个图片封装
+     * 获取图片包装类（单条）
      *
      * @param picture
      * @param request
@@ -48,7 +48,7 @@ public interface PictureService extends IService<Picture> {
     PictureVO getPictureVO(Picture picture, HttpServletRequest request);
 
     /**
-     * 分页获取图片封装
+     * 获取图片包装类（分页）
      *
      * @param picturePage
      * @param request
@@ -57,9 +57,37 @@ public interface PictureService extends IService<Picture> {
     Page<PictureVO> getPictureVOPage(Page<Picture> picturePage, HttpServletRequest request);
 
     /**
-     * 图片数据校验
+     * 获取查询对象
+     *
+     * @param pictureQueryRequest
+     * @return
+     */
+    QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest);
+
+    /**
+     * 图片审核
+     *
+     * @param pictureReviewRequest
+     * @param loginUser
+     */
+    void doPictureReview(PictureReviewRequest pictureReviewRequest, User loginUser);
+
+    /**
+     * 填充审核参数
      *
      * @param picture
+     * @param loginUser
      */
-    void validPicture(Picture picture);
+    void fillReviewParams(Picture picture, User loginUser);
+
+    /**
+     * 批量抓取和创建图片
+     *
+     * @param pictureUploadByBatchRequest
+     * @param loginUser
+     * @return 成功创建的图片数
+     */
+    Integer uploadPictureByBatch(PictureUploadByBatchRequest pictureUploadByBatchRequest,
+                                 User loginUser);
+
 }
