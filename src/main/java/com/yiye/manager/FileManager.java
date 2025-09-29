@@ -95,7 +95,7 @@ public class FileManager {
     }
 
     /**
-     * 删除临时文件
+     * 清理临时文件
      */
     public void deleteTempFile(File file) {
         if (file == null) {
