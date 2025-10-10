@@ -3,6 +3,7 @@ package com.yiye.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yiye.model.dto.picture.PictureEditByBatchRequest;
 import com.yiye.model.dto.picture.PictureEditRequest;
 import com.yiye.model.dto.picture.PictureQueryRequest;
 import com.yiye.model.dto.picture.PictureReviewRequest;
@@ -13,6 +14,7 @@ import com.yiye.model.entity.User;
 import com.yiye.model.vo.PictureVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author longyiye
@@ -121,5 +123,23 @@ public interface PictureService extends IService<Picture> {
      * @param picture
      */
     void checkPictureAuth(User loginUser, Picture picture);
+
+    /**
+     * 根据颜色搜索图片
+     *
+     * @param spaceId
+     * @param picColor
+     * @param loginUser
+     * @return
+     */
+    List<PictureVO> searchPictureByColor(Long spaceId, String picColor, User loginUser);
+
+    /**
+     * 批量编辑图片
+     *
+     * @param pictureEditByBatchRequest
+     * @param loginUser
+     */
+    void editPictureByBatch(PictureEditByBatchRequest pictureEditByBatchRequest, User loginUser);
 
 }

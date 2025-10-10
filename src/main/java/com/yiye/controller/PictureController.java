@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.yiye.annotation.AuthCheck;
+import com.yiye.api.imagesearch.ImageSearchApiFacade;
+import com.yiye.api.imagesearch.model.ImageSearchResult;
 import com.yiye.common.BaseResponse;
 import com.yiye.common.DeleteRequest;
 import com.yiye.common.ResultUtils;
@@ -13,12 +15,15 @@ import com.yiye.constant.UserConstant;
 import com.yiye.exception.BusinessException;
 import com.yiye.exception.ErrorCode;
 import com.yiye.exception.ThrowUtils;
+import com.yiye.model.dto.picture.PictureEditByBatchRequest;
 import com.yiye.model.dto.picture.PictureEditRequest;
 import com.yiye.model.dto.picture.PictureQueryRequest;
 import com.yiye.model.dto.picture.PictureReviewRequest;
 import com.yiye.model.dto.picture.PictureUpdateRequest;
 import com.yiye.model.dto.picture.PictureUploadByBatchRequest;
 import com.yiye.model.dto.picture.PictureUploadRequest;
+import com.yiye.model.dto.picture.SearchPictureByColorRequest;
+import com.yiye.model.dto.picture.SearchPictureByPictureRequest;
 import com.yiye.model.entity.Picture;
 import com.yiye.model.entity.Space;
 import com.yiye.model.entity.User;
@@ -44,6 +49,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -327,6 +333,54 @@ public class PictureController {
         User loginUser = userService.getLoginUser(request);
         int uploadCount = pictureService.uploadPictureByBatch(pictureUploadByBatchRequest, loginUser);
         return ResultUtils.success(uploadCount);
+    }
+
+    /**
+     * 以图搜图
+     */
+    @PostMapping("/search/picture")
+    public BaseResponse<List<ImageSearchResult>> searchPictureByPicture(@RequestBody SearchPictureByPictureRequest searchPictureByPictureRequest) {
+        ThrowUtils.throwIf(searchPictureByPictureRequest == null, ErrorCode.PARAMS_ERROR);
+        Long pictureId = searchPictureByPictureRequest.getPictureId();
+        ThrowUtils.throwIf(pictureId == null || pictureId <= 0, ErrorCode.PARAMS_ERROR);
+        Picture picture = pictureService.getById(pictureId);
+        ThrowUtils.throwIf(picture == null, ErrorCode.NOT_FOUND_ERROR);
+        List<ImageSearchResult> resultList = new ArrayList<>();
+        // 这个 start 是控制查询多少页, 每页是 20 条
+        int start = 0;
+        while (resultList.size() <= 50) {
+            List<ImageSearchResult> tempList = ImageSearchApiFacade.searchImage(picture.getUrl(), start);
+            if (tempList.isEmpty()) {
+                break;
+            }
+            resultList.addAll(tempList);
+            start += tempList.size();
+        }
+        return ResultUtils.success(resultList);
+    }
+
+    /**
+     * 按照颜色搜索
+     */
+    @PostMapping("/search/color")
+    public BaseResponse<List<PictureVO>> searchPictureByColor(@RequestBody SearchPictureByColorRequest searchPictureByColorRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(searchPictureByColorRequest == null, ErrorCode.PARAMS_ERROR);
+        String picColor = searchPictureByColorRequest.getPicColor();
+        Long spaceId = searchPictureByColorRequest.getSpaceId();
+        User loginUser = userService.getLoginUser(request);
+        List<PictureVO> pictureVOList = pictureService.searchPictureByColor(spaceId, picColor, loginUser);
+        return ResultUtils.success(pictureVOList);
+    }
+
+    /**
+     * 批量编辑图片
+     */
+    @PostMapping("/edit/batch")
+    public BaseResponse<Boolean> editPictureByBatch(@RequestBody PictureEditByBatchRequest pictureEditByBatchRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(pictureEditByBatchRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        pictureService.editPictureByBatch(pictureEditByBatchRequest, loginUser);
+        return ResultUtils.success(true);
     }
 
 }
