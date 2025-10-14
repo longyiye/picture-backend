@@ -10,11 +10,6 @@ import com.yiye.model.vo.UserVO;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-/**
- * @author longyiye
- * @description 针对表【user(用户)】的数据库操作Service
- * @createDate 2025-09-26 15:16:04
- */
 public interface UserService extends IService<User> {
     /**
      * 用户注册

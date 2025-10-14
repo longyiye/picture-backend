@@ -8,10 +8,6 @@ import com.yiye.model.vo.space.analyze.*;
 
 import java.util.List;
 
-/**
- * @author longyiye
- * @createDate 2025-10-13 16:13:34
- */
 public interface SpaceAnalyzeService extends IService<Space> {
 
     /**

@@ -29,11 +29,6 @@ import java.util.stream.Collectors;
 
 import static com.yiye.constant.UserConstant.USER_LOGIN_STATE;
 
-/**
- * @author longyiye
- * @description 针对表【user(用户)】的数据库操作Service实现
- * @createDate 2025-09-26 15:16:04
- */
 @Service
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>

@@ -36,10 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * @author longyiye
- * @createDate 2025-10-13 19:53:34
- */
 @Service
 public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space>
         implements SpaceAnalyzeService {

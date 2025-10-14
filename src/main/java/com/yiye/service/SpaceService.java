@@ -11,11 +11,6 @@ import com.yiye.model.vo.SpaceVO;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * @author longyiye
- * @description 针对表【space(空间)】的数据库操作Service
- * @createDate 2025-10-6 19:53:34
- */
 public interface SpaceService extends IService<Space> {
 
     /**

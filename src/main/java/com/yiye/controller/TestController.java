@@ -17,4 +17,5 @@ public class TestController {
     public BaseResponse<String> test() {
         return ResultUtils.success("test success");
     }
+
 }

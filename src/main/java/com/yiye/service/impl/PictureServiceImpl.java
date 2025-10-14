@@ -62,11 +62,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * @author longyiye
- * @description 针对表【picture(图片)】的数据库操作Service实现
- * @createDate 2025-09-28 23:27:08
- */
 @Slf4j
 @Service
 public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>

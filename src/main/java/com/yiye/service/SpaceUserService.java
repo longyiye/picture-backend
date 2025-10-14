@@ -10,11 +10,6 @@ import com.yiye.model.vo.SpaceUserVO;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-/**
- * @author longyiye
- * @description 针对表【space_user(空间用户关联)】的数据库操作Service
- * @createDate 2025-10-13 20:07:15
- */
 public interface SpaceUserService extends IService<SpaceUser> {
 
     /**
