@@ -14,6 +14,7 @@ import com.yiye.model.dto.user.UserLoginRequest;
 import com.yiye.model.dto.user.UserQueryRequest;
 import com.yiye.model.dto.user.UserRegisterRequest;
 import com.yiye.model.dto.user.UserUpdateRequest;
+import com.yiye.model.dto.user.VipExchangeRequest;
 import com.yiye.model.entity.User;
 import com.yiye.model.vo.LoginUserVO;
 import com.yiye.model.vo.UserVO;
@@ -51,6 +52,7 @@ public class UserController {
 
     /**
      * 用户登录
+     *
      * @param userLoginRequest
      * @param request
      * @return
@@ -66,6 +68,7 @@ public class UserController {
 
     /**
      * 获取用户登录信息
+     *
      * @param request
      * @return
      */
@@ -77,6 +80,7 @@ public class UserController {
 
     /**
      * 用户注销
+     *
      * @param request
      * @return
      */
@@ -173,6 +177,20 @@ public class UserController {
         List<UserVO> userVOList = userService.getUserVOList(userPage.getRecords());
         userVOPage.setRecords(userVOList);
         return ResultUtils.success(userVOPage);
+    }
+
+    /**
+     * 兑换会员
+     */
+    @PostMapping("/exchange/vip")
+    public BaseResponse<Boolean> exchangeVip(@RequestBody VipExchangeRequest vipExchangeRequest,
+                                             HttpServletRequest httpServletRequest) {
+        ThrowUtils.throwIf(vipExchangeRequest == null, ErrorCode.PARAMS_ERROR);
+        String vipCode = vipExchangeRequest.getVipCode();
+        User loginUser = userService.getLoginUser(httpServletRequest);
+        // 调用 service 层的方法进行会员兑换
+        boolean result = userService.exchangeVip(loginUser, vipCode);
+        return ResultUtils.success(result);
     }
 
 }
